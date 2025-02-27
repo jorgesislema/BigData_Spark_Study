@@ -88,3 +88,85 @@
     - Ajustando `repartition(n)` o `coalesce(n)` según la carga de datos.
     - Configurando `spark.default.parallelism` en base al número de núcleos disponibles.
 
+### 🔄 Transformaciones y Acciones
+
+21. **¿Cuál es la diferencia entre transformaciones y acciones en Spark?**  
+    - **Transformaciones**: Devuelven un nuevo RDD/DataFrame sin ejecutarse inmediatamente. Ejemplo: `map()`, `filter()`, `groupByKey()`.
+    - **Acciones**: Ejecutan las transformaciones y devuelven un resultado al driver. Ejemplo: `count()`, `collect()`, `take()`.
+
+22. **¿Qué es un narrow transformation y un wide transformation?**  
+    - **Narrow Transformation**: Las operaciones afectan solo una partición, sin requerir redistribución de datos. Ejemplo: `map()`, `filter()`.
+    - **Wide Transformation**: Requiere redistribuir datos entre múltiples particiones (shuffle). Ejemplo: `groupByKey()`, `reduceByKey()`.
+
+23. **¿Cuáles son ejemplos de transformaciones comunes en Spark?**  
+    - `map()`, `flatMap()`, `filter()`, `groupByKey()`, `reduceByKey()`, `repartition()`, `coalesce()`.
+
+24. **¿Cuáles son ejemplos de acciones comunes en Spark?**  
+    - `count()`, `collect()`, `take()`, `first()`, `saveAsTextFile()`, `foreach()`.
+
+25. **¿Qué es el proceso de Shuffle en Spark?**  
+    Es el proceso de redistribución de datos entre particiones, ocurre en operaciones como `groupByKey()` y `join()`, y puede afectar el rendimiento debido al tráfico de red.
+
+26. **¿Cómo se minimiza el Shuffle en Spark?**  
+    - Usar `reduceByKey()` en lugar de `groupByKey()`.
+    - Ajustar el número de particiones con `coalesce()` en lugar de `repartition()`.
+    - Evitar joins innecesarios y usar `broadcast()` cuando sea posible.
+
+27. **¿Cómo funcionan las transformaciones `map()` y `flatMap()`?**  
+    - `map()`: Aplica una función a cada elemento del RDD/DataFrame y devuelve un solo valor por entrada.
+    - `flatMap()`: Similar a `map()`, pero permite devolver múltiples valores por entrada, resultando en una estructura aplanada.
+
+28. **¿Cómo se diferencian `groupByKey()` y `reduceByKey()`?**  
+    - `groupByKey()`: Agrupa los valores por clave sin reducirlos, lo que puede generar un alto uso de memoria y shuffle.
+    - `reduceByKey()`: Aplica una función de reducción directamente en cada clave antes del shuffle, mejorando el rendimiento.
+
+29. **¿Por qué `reduceByKey()` es más eficiente que `groupByKey()`?**  
+    `reduceByKey()` realiza la agregación localmente en cada partición antes del shuffle, lo que minimiza la cantidad de datos transferidos a través de la red.
+
+30. **¿Cómo se pueden unir diferentes conjuntos de datos en Spark?**  
+    - Usando `join()` para combinar DataFrames/RDDs basados en una clave común.
+    - Optimizando joins con `broadcast()` cuando una de las tablas es pequeña.
+
+### 📊 Spark SQL y DataFrames
+
+31. **¿Qué es Spark SQL y para qué se utiliza?**  
+    Es un módulo de Spark que permite consultar datos estructurados usando SQL y APIs de DataFrames/Datasets, proporcionando optimizaciones automáticas a través del **Catalyst Optimizer**.
+
+32. **¿Cuál es la diferencia entre un DataFrame y un Dataset en Spark?**  
+    - **DataFrame**: Colección de datos estructurados similar a una tabla SQL, sin tipado estricto.
+    - **Dataset**: Similar a un DataFrame, pero con tipado fuerte y más seguridad en tiempo de compilación (solo disponible en Scala y Java).
+
+33. **¿Cómo se crean DataFrames en Spark?**  
+    - Desde archivos CSV, JSON, Parquet: `spark.read.format("csv").load("archivo.csv")`.
+    - A partir de una consulta SQL: `spark.sql("SELECT * FROM tabla")`.
+    - Desde RDDs con `spark.createDataFrame(rdd, schema)`.
+
+34. **¿Cómo se puede ejecutar SQL en Spark?**  
+    - Usando `spark.sql("SELECT * FROM tabla")`.
+    - Creando una vista temporal con `createOrReplaceTempView()` y ejecutando consultas SQL sobre ella.
+
+35. **¿Qué es una vista temporal en Spark SQL?**  
+    Es una vista lógica que permite consultar un DataFrame con SQL dentro de una sesión de Spark, sin persistencia en disco.
+
+36. **¿Qué diferencia hay entre `createOrReplaceTempView()` y `createGlobalTempView()`?**  
+    - `createOrReplaceTempView()`: Solo está disponible dentro de la sesión de Spark actual.
+    - `createGlobalTempView()`: Disponible en todas las sesiones de Spark dentro del clúster.
+
+37. **¿Cómo se pueden leer datos de diferentes formatos en Spark SQL?**  
+    - CSV: `spark.read.csv("archivo.csv")`.
+    - JSON: `spark.read.json("archivo.json")`.
+    - Parquet: `spark.read.parquet("archivo.parquet")`.
+    - ORC: `spark.read.orc("archivo.orc")`.
+
+38. **¿Qué es el Catalyst Optimizer en Spark?**  
+    Es el optimizador de consultas de Spark SQL, encargado de transformar y mejorar el plan de ejecución de consultas para maximizar el rendimiento.
+
+39. **¿Cómo funciona el Predicate Pushdown en Spark?**  
+    Es una técnica de optimización que filtra los datos lo más cerca posible de la fuente, reduciendo la cantidad de datos leídos y mejorando el rendimiento.
+
+40. **¿Cómo se pueden escribir resultados en diferentes formatos en Spark SQL?**  
+    - CSV: `df.write.csv("salida.csv")`.
+    - JSON: `df.write.json("salida.json")`.
+    - Parquet: `df.write.parquet("salida.parquet")`.
+    - ORC: `df.write.orc("salida.orc")`.
+
