@@ -254,5 +254,223 @@
     - Usar `coalesce()` para reducir la cantidad de archivos pequeños.
     - Configurar `spark.sql.files.maxPartitionBytes` para controlar el tamaño de cada partición.
 
+### ⚙️ Integraciones y Configuración
+
+61. **¿Cómo se integra Spark con Hadoop HDFS?**
+
+    - Usando spark.read.text("hdfs://ruta") para leer datos.
+
+    - Guardando datos con df.write.parquet("hdfs://ruta").
+
+    - Configurando fs.defaultFS en spark-defaults.conf.
+
+62. **¿Cómo se puede conectar Spark con bases de datos SQL?**
+
+    - Usando JDBC con spark.read.format("jdbc").option("url", "jdbc:mysql://...").
+
+    - Escribiendo datos con df.write.mode("append").jdbc(...).
+
+63. **¿Cómo usar Spark con Amazon S3?**
+
+    - Configurando credenciales con spark.hadoop.fs.s3a.access.key.
+
+    - Leyendo datos con spark.read.parquet("s3a://bucket/dataset.parquet").
+
+64. **¿Cómo configurar Spark en un clúster de Kubernetes?**
+
+    - Definiendo imágenes de Docker con spark.kubernetes.container.image.
+
+    - Enviando tareas con spark-submit --master k8s://.
+
+65. **¿Qué ventajas tiene usar Spark en la nube?**
+
+    - Escalabilidad automática.
+
+    - Integración con servicios como AWS EMR, Databricks y Google Dataproc.
+
+    - Costos optimizados por demanda.
+
+66. **¿Cómo configurar el uso de GPUs en Spark?**
+
+    - Configurando spark.task.resource.gpu.amount.
+
+    - Usando bibliotecas como RAPIDS para acelerar consultas SQL.
+
+67. **¿Cómo funciona la compatibilidad de Spark con Delta Lake?**
+
+    - Delta Lake añade soporte ACID sobre Spark.
+
+    - Usa format("delta") en read y write para transacciones confiables.
+
+
+### ⚙️ Integraciones y Configuración
+
+68. **¿Cómo se puede utilizar Spark con Cassandra?**  
+    - Usando el conector `spark-cassandra-connector`.
+    - Leyendo datos con `spark.read.format("org.apache.spark.sql.cassandra").load()`.
+    - Escribiendo datos con `df.write.format("org.apache.spark.sql.cassandra").save()`.
+
+69. **¿Cómo se gestiona la seguridad en Apache Spark?**  
+    - Autenticación con Kerberos.
+    - Encriptación de datos en tránsito y en reposo.
+    - Configuración de permisos en HDFS y bases de datos conectadas.
+
+70. **¿Cuáles son las diferencias entre Spark en modo local, clúster y cliente?**  
+    - **Modo Local**: Se ejecuta en una sola máquina.
+    - **Modo Clúster**: Usa múltiples nodos en un clúster distribuido (YARN, Mesos, Kubernetes).
+    - **Modo Cliente**: La aplicación Spark se ejecuta desde la máquina del usuario y envía tareas al clúster.
+
+### 🏆 Prácticas Avanzadas
+
+71. **¿Cómo se pueden depurar errores en Spark?**  
+    - Usar `spark-submit --verbose` para ver logs detallados.
+    - Revisar `Spark UI` para identificar cuellos de botella.
+    - Capturar excepciones con `try-except` en PySpark.
+
+72. **¿Cómo analizar logs en Spark UI?**  
+    - Revisar la pestaña **Stages** para identificar tareas lentas.
+    - Usar la vista **DAG Visualization** para entender el flujo de trabajo.
+    - Explorar **Executors** para ver consumo de memoria y CPU.
+
+73. **¿Cómo funciona el monitoreo en Spark?**  
+    - Se puede realizar con **Spark UI**, **Ganglia**, **Prometheus** y **Grafana**.
+    - Se pueden habilitar métricas con `spark.metrics.conf`.
+
+74. **¿Qué herramientas se pueden usar para monitorear un clúster de Spark?**  
+    - **Spark UI** (monitoreo en tiempo real).
+    - **Ganglia** (métricas del clúster).
+    - **Prometheus y Grafana** (visualización personalizada).
+
+75. **¿Cómo se pueden visualizar los DAGs en Spark?**  
+    - Usando la pestaña **DAG Visualization** en **Spark UI**.
+    - Ejecutando `df.explain(mode="formatted")` para ver el plan de ejecución.
+
+76. **¿Cómo configurar logs detallados en Spark?**  
+    - Modificando `log4j.properties`.
+    - Usando `spark-submit --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties`.
+
+77. **¿Cómo mejorar la estabilidad de un trabajo de Spark a largo plazo?**  
+    - Optimizar la gestión de memoria (`spark.memory.fraction`).
+    - Reducir el uso de `collect()` y `broadcast()` en grandes volúmenes de datos.
+    - Usar particiones eficientes para minimizar el shuffle.
+
+78. **¿Cómo configurar el auto-scaling en Spark?**  
+    - Usando `spark.dynamicAllocation.enabled=true`.
+    - Configurando `spark.executor.instances` y `spark.executor.cores` dinámicamente.
+
+79. **¿Cómo se pueden manejar fallos de tareas en Spark?**  
+    - Usando `spark.task.maxFailures` para reintentar tareas fallidas.
+    - Implementando checkpointing en Spark Streaming.
+    - Monitoreando logs para detectar patrones de error.
+
+80. **¿Cómo se pueden automatizar flujos de trabajo en Spark?**  
+    - Usando **Apache Airflow** o **Oozie**.
+    - Programando ejecuciones con **cron jobs**.
+    - Implementando pipelines con **Databricks Workflows** o **AWS Step Functions**.
+
+### 🔎 Casos de Uso
+
+81. **¿Cómo se usa Spark para procesamiento de logs?**  
+    - Spark puede analizar grandes volúmenes de logs almacenados en HDFS o S3.
+    - Se pueden aplicar filtros y agregaciones con Spark SQL para detectar patrones.
+    - Integración con herramientas como ELK (Elasticsearch, Logstash, Kibana) para visualización.
+
+82. **¿Cómo se puede implementar un sistema de recomendaciones con Spark?**  
+    - Usando la biblioteca **MLlib** y el algoritmo **ALS (Alternating Least Squares)**.
+    - Entrenando modelos con datos de interacciones usuario-producto.
+    - Generando recomendaciones personalizadas basadas en similitudes.
+
+83. **¿Cómo Spark puede mejorar el rendimiento en ETLs?**  
+    - Permite paralelizar el procesamiento y minimizar el tiempo de ejecución.
+    - Soporte para transformaciones eficientes con DataFrames y Spark SQL.
+    - Uso de `partitionBy()` y `cache()` para optimizar escrituras y consultas.
+
+84. **¿Cómo usar Spark para análisis en tiempo real?**  
+    - Implementando **Structured Streaming** con fuentes como Kafka.
+    - Aplicando agregaciones y filtros sobre flujos de datos en tiempo real.
+    - Integración con bases de datos NoSQL como Cassandra y MongoDB.
+
+85. **¿Cómo se pueden entrenar modelos de Machine Learning en Spark?**  
+    - Usando **MLlib** para algoritmos como regresión, clustering y clasificación.
+    - Entrenando modelos sobre grandes volúmenes de datos distribuidos.
+    - Implementando pipelines de ML con **Pipeline API** para preprocesamiento y evaluación.
+
+86. **¿Cómo se puede construir un pipeline de datos con Spark?**  
+    - Extrayendo datos desde múltiples fuentes como HDFS, S3 o Kafka.
+    - Transformando datos con Spark SQL y almacenando en formatos optimizados (Parquet, ORC).
+    - Automatizando procesos con Apache Airflow o Databricks Workflows.
+
+87. **¿Cómo se pueden procesar datos geoespaciales con Spark?**  
+    - Usando bibliotecas como **GeoSpark** para procesamiento distribuido de datos espaciales.
+    - Aplicando consultas espaciales como `ST_Contains()` y `ST_Distance()`.
+    - Integración con GIS (Sistemas de Información Geográfica) para visualización.
+
+88. **¿Qué tipos de análisis de datos se pueden hacer con Spark?**  
+    - **Análisis descriptivo**: Resúmenes y estadísticas de grandes volúmenes de datos.
+    - **Análisis predictivo**: Modelos de ML para predicción de tendencias.
+    - **Análisis en tiempo real**: Detección de anomalías y procesamiento de eventos en vivo.
+
+89. **¿Cómo implementar procesamiento de datos con Spark en la nube?**  
+    - Usando servicios como **AWS EMR, Databricks, Google Cloud Dataproc**.
+    - Optimizando la escalabilidad con instancias dinámicas y almacenamiento distribuido.
+    - Integración con Data Lakes en la nube como **Delta Lake**.
+
+90. **¿Cómo Spark maneja cargas de trabajo en Big Data?**  
+    - Distribuyendo tareas entre múltiples nodos para escalabilidad horizontal.
+    - Optimización con `spark.sql.shuffle.partitions` y **Adaptive Query Execution (AQE)**.
+    - Uso de `broadcast()` para optimizar joins en grandes conjuntos de datos.
+
+### 🔮 Futuro de Spark
+
+91. **¿Cómo ha evolucionado Apache Spark en los últimos años?**  
+    - De ser una herramienta de procesamiento en memoria a una plataforma unificada para Batch y Streaming.
+    - Optimización con Catalyst Optimizer y Adaptive Query Execution.
+    - Integración con Data Lakes y compatibilidad con tecnologías de la nube.
+
+92. **¿Cuáles son las tendencias futuras de Apache Spark?**  
+    - Mayor uso de Spark en **inteligencia artificial y aprendizaje automático**.
+    - Integración más fuerte con Kubernetes para despliegues escalables.
+    - Uso optimizado de GPUs y aceleradores de hardware.
+
+93. **¿Cómo puede Spark adaptarse a los cambios en hardware y nube?**  
+    - Mejoras en el soporte para procesamiento distribuido en arquitecturas **serverless**.
+    - Integración con servicios de computación elástica en la nube.
+    - Uso de almacenamiento optimizado para acceso rápido a grandes volúmenes de datos.
+
+94. **¿Qué impacto ha tenido Spark en la industria de Big Data?**  
+    - Reducción del tiempo de procesamiento de datos en grandes empresas.
+    - Estandarización en pipelines de datos en empresas tecnológicas y financieras.
+    - Migración desde Hadoop MapReduce hacia Spark por su velocidad y facilidad de uso.
+
+95. **¿Cómo se compara Spark con otras tecnologías emergentes?**  
+    - **Spark vs. Flink**: Flink es más eficiente para procesamiento en tiempo real, pero Spark es más versátil.
+    - **Spark vs. Dask**: Dask es más ligero para análisis en Python, pero Spark es mejor para grandes volúmenes de datos.
+    - **Spark vs. Snowflake**: Snowflake es una solución administrada, mientras que Spark ofrece mayor flexibilidad.
+
+96. **¿Qué mejoras se esperan en futuras versiones de Spark?**  
+    - Mayor optimización en la ejecución de consultas SQL.
+    - Mejor soporte para lenguajes como Rust y compatibilidad con WebAssembly.
+    - Avances en integración con herramientas de IA como TensorFlow y PyTorch.
+
+97. **¿Cómo afectará la evolución de la IA y ML a Spark?**  
+    - Mayor uso de Spark para entrenamiento distribuido de modelos de Machine Learning.
+    - Integración con frameworks como TensorFlow para procesamiento en escala.
+    - Uso de Spark en modelos de generación de datos sintéticos para IA.
+
+98. **¿Cómo puede Spark mejorar su compatibilidad con arquitecturas modernas?**  
+    - Optimización para despliegue en Kubernetes y arquitecturas **cloud-native**.
+    - Mejoras en la interoperabilidad con servicios como Apache Iceberg y Delta Lake.
+    - Reducción de latencias en consultas SQL con técnicas avanzadas de optimización.
+
+99. **¿Qué papel jugará Spark en la analítica en tiempo real?**  
+    - Mayor integración con sistemas de streaming como Apache Pulsar y Redpanda.
+    - Mejoras en **Structured Streaming** para reducir latencias.
+    - Uso de Spark con **Edge Computing** para análisis en dispositivos IoT.
+
+100. **¿Cuál es el futuro de Spark en la integración con Data Lakes y Warehouses?**  
+    - Adopción masiva de **Delta Lake** como formato estándar.
+    - Integración con **Lakehouse** para combinar almacenamiento en Data Lakes y capacidades de Data Warehouses.
+    - Optimización en Spark para consultas federadas con múltiples fuentes de datos.
+
 
 
