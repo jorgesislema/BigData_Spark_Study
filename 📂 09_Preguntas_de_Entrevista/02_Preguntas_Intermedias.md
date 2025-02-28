@@ -170,3 +170,89 @@
     - Parquet: `df.write.parquet("salida.parquet")`.
     - ORC: `df.write.orc("salida.orc")`.
 
+### 🔀 Spark Streaming
+
+41. **¿Qué es Spark Streaming y en qué se diferencia de Batch Processing?**  
+    Spark Streaming permite procesar datos en tiempo real dividiéndolos en pequeños micro-batches, mientras que Batch Processing procesa datos en lotes estáticos sin una entrada continua.
+
+42. **¿Cuál es la diferencia entre Spark Streaming y Structured Streaming?**  
+    - **Spark Streaming** usa **DStreams** (RDDs de datos en tiempo real).
+    - **Structured Streaming** usa **DataFrames y Datasets**, lo que permite optimizaciones automáticas con el Catalyst Optimizer y una sintaxis SQL más intuitiva.
+
+43. **¿Cómo se procesa un flujo de datos en Spark Streaming?**  
+    1. **Recepción** de datos en micro-batches desde una fuente como Kafka o sockets.
+    2. **Transformación** aplicando operaciones como `map()`, `filter()`, `groupBy()`.
+    3. **Salida** almacenando los resultados en bases de datos, sistemas de archivos o dashboards.
+
+44. **¿Qué son los DStreams en Spark Streaming?**  
+    Son estructuras de datos en Spark Streaming que representan una serie de RDDs en tiempo real y permiten procesamiento distribuido de flujos de datos continuos.
+
+45. **¿Cómo se conecta Spark Streaming con Kafka?**  
+    - Usando `spark.readStream.format("kafka")` en Structured Streaming.
+    - Usando `KafkaUtils.createDirectStream()` en Spark Streaming tradicional.
+
+46. **¿Cómo se gestiona el checkpointing en Spark Streaming?**  
+    El checkpointing guarda el estado de la aplicación en HDFS o S3 para recuperación en caso de fallos, asegurando tolerancia a fallos en el procesamiento de flujos.
+
+47. **¿Qué es el concepto de Watermarking en Structured Streaming?**  
+    Es una técnica para manejar eventos tardíos en flujos de datos, estableciendo un límite de tiempo hasta el cual Spark considera datos atrasados en una ventana de agregación.
+
+48. **¿Cómo se manejan eventos tardíos en Spark Streaming?**  
+    - Con **Watermarking** para establecer un umbral de retención de datos.
+    - Con **ventanas de tiempo** (`window()` en Structured Streaming) para agrupar eventos en intervalos.
+
+49. **¿Qué diferencia hay entre Output Modes en Structured Streaming?**  
+    - **Append**: Solo muestra nuevas filas.
+    - **Complete**: Reemplaza toda la tabla con cada actualización.
+    - **Update**: Solo actualiza las filas modificadas.
+
+50. **¿Cómo se pueden almacenar los resultados de un streaming en Spark?**  
+    - En sistemas de archivos (`writeStream.format("parquet").start()`).
+    - En bases de datos (`writeStream.format("jdbc")`).
+    - En Kafka (`writeStream.format("kafka")`).
+
+### 🚀 Optimización en Spark
+
+51. **¿Qué es Adaptive Query Execution (AQE) en Spark?**  
+    Es una optimización en tiempo de ejecución que ajusta dinámicamente particiones y estrategias de join según los datos reales procesados.
+
+52. **¿Cómo se puede mejorar el rendimiento de consultas en Spark SQL?**  
+    - Usar formatos como Parquet y ORC.
+    - Habilitar AQE (`spark.sql.adaptive.enabled = true`).
+    - Aplicar filtrado temprano (`WHERE` antes de `JOIN`).
+
+53. **¿Qué son los Broadcast Joins y cuándo se usan?**  
+    Son una optimización donde Spark envía una tabla pequeña a todos los ejecutores en lugar de hacer un shuffle masivo, útil cuando una de las tablas es pequeña (`broadcast(df)`).
+
+54. **¿Cómo afecta el número de particiones al rendimiento de Spark?**  
+    - **Pocas particiones** pueden causar un uso ineficiente de los recursos.
+    - **Demasiadas particiones** pueden aumentar la sobrecarga de administración de tareas.
+
+55. **¿Cómo optimizar un Shuffle en Spark?**  
+    - Usar `reduceByKey()` en lugar de `groupByKey()`.
+    - Reducir el número de particiones (`coalesce()`).
+    - Habilitar AQE (`spark.sql.adaptive.enabled = true`).
+
+56. **¿Qué es `spark.sql.shuffle.partitions` y cuándo ajustarlo?**  
+    Es el número de particiones usadas en operaciones de shuffle en Spark SQL. Se recomienda ajustar según la cantidad de datos y núcleos disponibles (`spark.conf.set("spark.sql.shuffle.partitions", 200)`).
+
+57. **¿Cómo mejorar el rendimiento de escrituras en Spark?**  
+    - Usar `partitionBy()` al escribir archivos grandes.
+    - Aplicar `coalesce()` para reducir archivos pequeños.
+    - Preferir formatos binarios eficientes como Parquet.
+
+58. **¿Cuáles son las mejores prácticas para optimizar la memoria en Spark?**  
+    - Usar `persist()` y `cache()` sabiamente.
+    - Ajustar `spark.memory.fraction` y `spark.memory.storageFraction`.
+    - Evitar `collect()` en grandes volúmenes de datos.
+
+59. **¿Cómo funciona el Garbage Collection en Spark?**  
+    - Java GC maneja la memoria de Spark, lo que puede causar pausas.
+    - Se puede optimizar con `spark.memory.fraction` y evitando objetos innecesarios en caché.
+
+60. **¿Cómo evitar la fragmentación de archivos al escribir datos en Spark?**  
+    - Usar `coalesce()` para reducir la cantidad de archivos pequeños.
+    - Configurar `spark.sql.files.maxPartitionBytes` para controlar el tamaño de cada partición.
+
+
+
